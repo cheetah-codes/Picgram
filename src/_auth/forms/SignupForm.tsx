@@ -1,12 +1,13 @@
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Navigate, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,8 +16,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { SignUpValidation } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
+import { createUserAccount } from "@/lib/appwrite/api";
 
 const SignupForm = () => {
+  const { toast } = useToast();
   const isLoading = false;
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignUpValidation>>({
@@ -25,15 +28,25 @@ const SignupForm = () => {
       name: "",
       username: "",
       email: "example@company.com",
-      password: "type your password here",
+      password: "",
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof SignUpValidation>) {
+  async function onSubmit(values: z.infer<typeof SignUpValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    const newUser = await createUserAccount(values);
+    // console.log(values);
+    // console.log(newUser, "from form");
+    if (!newUser) {
+      return toast({
+        title: "Account:Creation",
+        description: "Account Successfully Failed",
+      });
+    }
+
+    // const session = await signInAccount()
   }
 
   return (
@@ -132,6 +145,16 @@ const SignupForm = () => {
               "Sign up"
             )}
           </Button>
+
+          <p className="text-small-regular text-light-2 text-center mt-2 ">
+            Already have an account <span>.</span>
+            <Link
+              to="/sign-in"
+              className="text-primary-500 text-small-semibold ml-1 underline"
+            >
+              Log in
+            </Link>
+          </p>
         </form>
       </div>
     </Form>
