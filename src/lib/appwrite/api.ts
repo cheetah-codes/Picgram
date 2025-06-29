@@ -1,5 +1,5 @@
 import { INewUser } from "@/types";
-import { Avatars, ID } from "appwrite";
+import { Avatars, ID, Query } from "appwrite";
 import { account, appwriteConfig, avatars, databases } from "./config";
 import { email } from "zod/v4-mini";
 
@@ -58,6 +58,25 @@ export async function signInAccount(user: { email: string; password: string }) {
       user.password
     );
     return session;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCurrentUser() {
+  try {
+    const currentAccount = await account.get();
+    if (!currentAccount) throw Error;
+
+    const currentUser = await databases.listDocuments(
+      appwriteConfig.databseId,
+      appwriteConfig.userCollectionId,
+      [Query.equal("accountId", currentAccount.$id)]
+    );
+
+    if (!currentUser) throw Error;
+
+    return currentUser.documents[0];
   } catch (error) {
     console.log(error);
   }
