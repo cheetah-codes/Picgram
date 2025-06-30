@@ -40,7 +40,7 @@ const SignupForm = () => {
     defaultValues: {
       name: "",
       username: "",
-      email: "example@company.com",
+      email: "",
       password: "",
     },
   });
