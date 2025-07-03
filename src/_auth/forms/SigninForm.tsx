@@ -19,8 +19,10 @@ import Loader from "@/components/shared/Loader";
 // import { createUserAccount } from "@/lib/appwrite/api";
 import { useSignInAccount } from "@/lib/react-query/queries-and-mutations";
 import { useUserContext } from "@/context/AuthContext";
+import { useState } from "react";
 
 const SignInForm = () => {
+  const [inputype, setInputType] = useState("password");
   const { toast } = useToast();
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
   const navigate = useNavigate();
@@ -105,8 +107,9 @@ const SignInForm = () => {
               <FormItem>
                 <FormLabel>password</FormLabel>
                 <FormControl>
-                  <Input type="password" className="shad-input" {...field} />
+                  <Input type={inputype} className="shad-input" {...field} />
                 </FormControl>
+                <span onClick={() => setInputType("text")}>show</span>
                 {/* <FormDescription>
                   This is your public display name.
                 </FormDescription> */}
