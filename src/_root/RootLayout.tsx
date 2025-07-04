@@ -1,3 +1,4 @@
+import BottomBar from "@/components/shared/BottomBar";
 import LeftSideBar from "@/components/shared/LeftSideBar";
 import TopBar from "@/components/shared/TopBar";
 import React from "react";
@@ -12,6 +13,8 @@ const RootLayout = () => {
       <section className="flex flex-1 h-full">
         <Outlet />
       </section>
+
+      <BottomBar />
     </div>
   );
 };
