@@ -41,7 +41,7 @@ export async function saveUserToDB(user: {
 }) {
   try {
     const newUser = await databases.createDocument(
-      appwriteConfig.databseId,
+      appwriteConfig.databaseId,
       appwriteConfig.userCollectionId,
       ID.unique(),
       user
@@ -54,15 +54,29 @@ export async function saveUserToDB(user: {
 }
 
 export async function signInAccount(user: { email: string; password: string }) {
-  try {
-    const session = await account.createEmailPasswordSession(
-      user.email,
-      user.password
-    );
-    return session;
-  } catch (error) {
-    console.log(error);
-  }
+  // try {
+  //   const session = await account.createEmailPasswordSession(
+  //     user.email,
+  //     user.password
+  //   );
+  //   return session;
+  // } catch (error) {
+  //   console.log(error);
+  // }
+
+  const promise = account.createEmailPasswordSession(
+    "email@example.com",
+    "password"
+  );
+
+  promise.then(
+    function (response) {
+      console.log("testng under signinaccount", response); // Success
+    },
+    function (error) {
+      console.log(error); // Failure
+    }
+  );
 }
 
 export async function getCurrentUser() {
@@ -71,7 +85,7 @@ export async function getCurrentUser() {
     if (!currentAccount) throw Error;
 
     const currentUser = await databases.listDocuments(
-      appwriteConfig.databseId,
+      appwriteConfig.databaseId,
       appwriteConfig.userCollectionId,
       [Query.equal("accountId", currentAccount.$id)]
     );
